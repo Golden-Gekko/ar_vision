@@ -6,18 +6,22 @@ from .import exceptions as e
 
 
 class CameraTool:
+    MAX_SCALE = 300
+
     def __init__(
         self,
         camera_number: int = 0,
         width: int = 640,
         height: int = 480,
         fps: int = 30,
+        scale: int = 100,
     ):
         for name, value in [
             ('camera_number', camera_number),
             ('width', width),
             ('height', height),
-            ('fps', fps)
+            ('fps', fps),
+            ('scale', scale)
         ]:
             if not isinstance(value, int):
                 raise TypeError(
@@ -28,7 +32,7 @@ class CameraTool:
         self.connect(camera_number)
         self.set_resolution(width, height)
         self.set_fps(fps)
-        self._scale = 1
+        self.scale = scale
 
     @staticmethod
     def list_available_cameras(
@@ -44,8 +48,28 @@ class CameraTool:
         cv2.setLogLevel(cur_lvl)
         return camera_list if camera_list else None
 
+    @property
+    def scale(self) -> int:
+        return self._scale
+
+    @scale.setter
+    def scale(self, value: int) -> None:
+        if not isinstance(value, int):
+            raise TypeError(
+                'scale должен быть типа "int", '
+                f'имеется {type(value).__name__}')
+        if value < 100:
+            self._scale = 100
+        elif value > self.MAX_SCALE:
+            self._scale = self.MAX_SCALE
+        else:
+            self._scale = value
+
     def _scale_frame(self, frame):
-        return frame
+        w, h = self.get_resolution()
+        scale = self._scale / 100.0
+        d_w, d_h = int((w - w / scale) / 2), int((h - h / scale) / 2)
+        return frame[d_w:(w-d_w), d_h:(h-d_h)]
 
     def read(self):
         if self._camera is None:

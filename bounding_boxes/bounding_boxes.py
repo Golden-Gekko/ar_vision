@@ -3,7 +3,7 @@ import os
 from ultralytics import YOLO
 
 from . import exceptions as e
-from models import DetectedObject
+from .models import DetectedObject
 
 
 class BoundingBoxes():
@@ -23,8 +23,6 @@ class BoundingBoxes():
 
         if not isinstance(model, str) or not isinstance(path_to_weights, str):
             raise e.BoundingBoxesInitError()
-        if not os.path.isdir(path_to_weights):
-            raise e.WeightsPathError(path_to_weights)
 
         self._model = YOLO(os.path.join(path_to_weights, model))
         self.filter = filter
@@ -48,7 +46,7 @@ class BoundingBoxes():
         self._filter = value
 
     def get_boxes(self, frame) -> list[DetectedObject]:
-        results = self._model(frame)
+        results = self._model(frame, verbose=False)
         boxes = results[0].boxes
 
         detected_objects = []

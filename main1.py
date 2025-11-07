@@ -22,7 +22,7 @@ while True:
         print('*' * len(s), s, '*' * len(s), sep='\n')
         break
 
-    results = model(frame)[0]
+    results = model(frame)
     
     for r in results:
         boxes = r.boxes

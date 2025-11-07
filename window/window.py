@@ -56,6 +56,7 @@ class Window():
         cv2.imshow(self.window_name, frame)
 
     def run(self, data_source=None):
+        print("Нажмите 'q' для выхода.")
         while True:
             if data_source is not None:
                 frame = data_source()
@@ -73,4 +74,10 @@ class Window():
                 except Exception as e:
                     print(f'Ошибка в callback для клавиши {chr(key)}: {e}')
 
+        cv2.destroyAllWindows()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
         cv2.destroyAllWindows()

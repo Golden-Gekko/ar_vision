@@ -1,17 +1,8 @@
-import os
-
-
 class BoundingBoxesInitError(Exception):
     def __init__(self):
         super().__init__(
             'Параметры конструктора класса BoundingBoxes должны '
             'быть типа "str"')
-
-
-class WeightsPathError(Exception):
-    def __init__(self, path: str):
-        super().__init__(
-            f'Указанная директория существует: {os.path.abspath(path)}.')
 
 
 class FilterSetterError(Exception):
