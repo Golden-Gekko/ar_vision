@@ -1,45 +1,38 @@
-import cv2
-from ultralytics import YOLO
+# from camera_tool import CameraTool
 
-for i in range(4):
-    cap = cv2.VideoCapture(i)
-    if cap.isOpened():
-        print(f'Камера {i} доступна')
-        cap.release()
-    else:
-        print(f'Камера {i} не найдена')
+# import cv2
+# # cam = CameraTool(0)
+# import win32api
+# monitors = win32api.EnumDisplayMonitors()
 
-cap = cv2.VideoCapture(0)
-cap.set(3, 640)  # Устанавливаем ширину
-cap.set(4, 480)  # Устанавливаем высоту
+# for monitor in monitors:
+#     print(win32api.GetMonitorInfo(monitor[0])['Monitor'])
+# # win32api.GetMonitorInfo(monitors[0][0])
 
-model = YOLO('yolo-Weights/yolov8n.pt')
+# cv2.namedWindow('AR View', cv2.WINDOW_NORMAL)
+# cv2.resizeWindow('AR View', 100, 100)
+# cv2.moveWindow('AR View', 100, 100)
 
-while True:
-    ret, frame = cap.read()
-    if not ret:
-        s = '*** Не удалось захватить кадр ***'
-        print('*' * len(s), s, '*' * len(s), sep='\n')
-        break
+# while True:
+#     if cv2.waitKey(1) == ord('q'):
+#         break
 
-    results = model(frame)
-    
-    for r in results:
-        boxes = r.boxes
-        for box in boxes:
-            x1, y1, x2, y2 = map(int, box.xyxy[0])
-            conf = float(box.conf)
-            cls = int(box.cls)
-            name = model.names[cls]
-            
-            label = f"{name} {conf:.2f}"
-            cv2.putText(frame, label, (x1, y1 - 10), 
-                       cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 255), 2)
-            cv2.rectangle(frame, (x1, y1), (x2, y2), (255, 0, 255), 3)
-    
-    cv2.imshow('YOLO Detection', frame)
-    if cv2.waitKey(1) == ord('q'):
-        break
 
-cap.release()
-cv2.destroyAllWindows()
+from window import Window
+
+def m_func():
+    print('m_func')
+def t_func():
+    print('t_func')
+def plus_func():
+    print('+_func')
+
+ar_win = Window(window_name='AR View', width=600, height=400)
+
+
+ar_win.set_key_callback('m', m_func)
+ar_win.set_key_callback('t', t_func)
+ar_win.set_key_callback('+', plus_func)
+
+
+ar_win.run()
