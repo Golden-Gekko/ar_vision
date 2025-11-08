@@ -13,14 +13,18 @@ class Window():
         window_name: str = 'Default',
     ):
         for name, value in [
-            ('monitor_number', monitor_number),
             ('width', width),
             ('height', height)
         ]:
-            if not isinstance(value, int):
+            if value is not None and not isinstance(value, int):
                 raise TypeError(
-                    f'{name} должен быть типа "int", '
-                    f'имеется {type(value).__name__}')
+                    f'{name} должен быть типа "int", имеется '
+                    f'{type(value).__name__}')
+
+        if not isinstance(monitor_number, int):
+            raise TypeError(
+                'monitor_number должен быть типа "int", имеется '
+                f'{type(value).__name__}')
 
         if not isinstance(window_name, str):
             raise TypeError(
@@ -55,7 +59,7 @@ class Window():
     def update(self, frame):
         cv2.imshow(self.window_name, frame)
 
-    def run(self, data_source=None):
+    def run(self, data_source=None) -> tuple[int, int]:
         print("Нажмите 'q' для выхода.")
         while True:
             if data_source is not None:
@@ -74,7 +78,9 @@ class Window():
                 except Exception as e:
                     print(f'Ошибка в callback для клавиши {chr(key)}: {e}')
 
+        _, _, width, height = cv2.getWindowImageRect(self.window_name)
         cv2.destroyAllWindows()
+        return width, height
 
     def __enter__(self):
         return self

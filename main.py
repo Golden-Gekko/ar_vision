@@ -92,7 +92,9 @@ def main():
             window.set_key_callback('+', app.increment_camera_scale)
             window.set_key_callback('-', app.decrement_camera_scale)
             window.set_key_callback('t', app.toggle_camera_showing)
-            window.run(data_source=app.get_frame_with_detections)
+            width, height = window.run(
+                data_source=app.get_frame_with_detections)
+            scale = camera.scale
 
     except Exception as e:
         print(f'Ошибка: {e}')
@@ -100,3 +102,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+    # from tools import check_available_monitors
+    # check_available_monitors()
