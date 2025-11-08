@@ -1,0 +1,20 @@
+DEFAULT_CONFIG = {
+    'camera': {
+        'camera_number': 0,
+        'width': 640,
+        'height': 480,
+        'fps': 30,
+        'scale': 100
+    },
+    'detection': {
+        'model': 'yolo11n.pt',
+        'path_to_weights': 'yolo_weights',
+        'filter': None
+    },
+    'window': {
+        'monitor_number': 0,
+        'width': 800,
+        'height': 600,
+        'window_name': 'YOLO Detection'
+    }
+}
