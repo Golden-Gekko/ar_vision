@@ -11,9 +11,9 @@ class CameraTool:
     def __init__(
         self,
         camera_number: int = 0,
-        width: int = 640,
-        height: int = 480,
-        fps: int = 30,
+        width: int | None = None,
+        height: int | None = None,
+        fps: int | None = None,
         scale: int = 100,
     ):
         for name, value in [
@@ -23,7 +23,7 @@ class CameraTool:
             ('fps', fps),
             ('scale', scale)
         ]:
-            if not isinstance(value, int):
+            if value is not None and not isinstance(value, int):
                 raise TypeError(
                     f'{name} должен быть типа "int", '
                     f'имеется {type(value).__name__}')
@@ -36,7 +36,7 @@ class CameraTool:
 
     @staticmethod
     def list_available_cameras(
-        max_number_cameras: int = 1,
+        max_number_cameras: int = 4,
     ) -> list[int] | None:
         camera_list = []
         cur_lvl = cv2.getLogLevel()
@@ -93,7 +93,13 @@ class CameraTool:
             self._camera.release()
             self._camera = None
 
-    def set_resolution(self, width: int = 640, height: int = 480):
+    def set_resolution(
+        self,
+        width: int | None = None,
+        height: int | None = None,
+    ):
+        if width is None or height is None:
+            return
         self._camera.set(cv2.CAP_PROP_FRAME_WIDTH, width)
         self._camera.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
         if (width, height) != self.get_resolution():
@@ -104,7 +110,9 @@ class CameraTool:
         actual_height = int(self._camera.get(cv2.CAP_PROP_FRAME_HEIGHT))
         return actual_width, actual_height
 
-    def set_fps(self, fps: int = 30):
+    def set_fps(self, fps: int | None = None):
+        if fps is None:
+            return
         self._camera.set(cv2.CAP_PROP_FPS, fps)
         if fps != self.get_fps():
             raise e.FPSNotSupportedError(fps)
